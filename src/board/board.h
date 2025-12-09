@@ -53,10 +53,10 @@ void boardInit(Board* board);
  * @param board 棋盘
  * @param row 落子行
  * @param col 落子列
- * @param pieceColor 落子颜色类型
+ * @param piece_color 落子颜色类型
  * @return int 1：落子成功，0：落子失败，位置被占用，-1：超出范围，落子不合法
  */
-int dropPiece(Board* board, int row, int col, Piece pieceColor);
+int dropPiece(Board* board, int row, int col, Piece piece_color);
 
 /**
  * @brief 获取棋子的颜色（调用前需要判断坐标合法性）
