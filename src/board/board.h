@@ -15,9 +15,10 @@
 #include<string.h>
 
 #define BOARD_SIZE 15 //棋盘大小
-#define COL_FROM_CHAR(c) ((c) - 'A') //列坐标转换
-#define ROW_FROM_NUM(n) ((n) - 1) //行坐标转换
-#define INPUT_MAX_LEN 4 //输入最大限制
+#define COL_FROM_CHAR(c) ((c)-'A'+1) //列坐标转换
+#define ROW_FROM_NUM(n) ((n)-'0') //行坐标转换
+#define INPUT_MAX_LEN 3 //输入最大限制
+#define INPUT_MIN_LEN 2 //输入最大限制
 
 /**
  * @brief 棋子，枚举类型，标识当前棋子的状态是黑/白/空白
@@ -34,7 +35,7 @@ typedef enum{
  * 
  */
 typedef struct{
-    Piece pieceColor[BOARD_SIZE][BOARD_SIZE];
+    Piece pieceColor[BOARD_SIZE+1][BOARD_SIZE+1];
     int last_row;
     int last_col;
     int pieceTotal;
@@ -86,7 +87,7 @@ bool isEmpty(const Board* board, int row, int col);
  * @param row 行坐标
  * @param col 列坐标
  * @return true 转换成功
- * @return false 字符串不合法
+ * @return false 字符串不合法或者坐标不合法
  */
 bool transInput2Coord(const char s[], int* row, int* col);
 
