@@ -10,6 +10,22 @@
 
 ## 编译与运行方法
 
+- 使用CMake和MinGW编译，仅支持**windows**环境
+- 请先检查环境是否安装好，输入下列指令后若能输出对应版本号，则环境配置完成
+```bash
+gcc -v
+cmake --version
+mingw32-make -v
+```
+- 编译方法1：先进入项目根目录，输入下列指令：
+```bash
+mkdir build
+cd build
+cmake -G "MinGW Makefiles" ..
+mingw32-make
+```
+- 编译方法2：使用写好的批处理脚本，在根目录中输入下列指令`./cmake_build.bat`
+- 运行方法：双击build/中的P2PChessGame.exe或者在根目录中`./build/P2PChessGame.exe`
 ## 文件结构
 
 本项目包含多个文件，在此节中说明文件组织结构
