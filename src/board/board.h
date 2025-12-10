@@ -81,7 +81,7 @@ Piece getPiece(const Board* board, int row, int col);
 bool isEmpty(const Board* board, int row, int col);
 
 /**
- * @brief 将字符坐标输入转换为有序整数对(row, col)
+ * @brief 将字符坐标输入转换为有序整数对(row, col)，同时确保范围在(1,1)~(15,15)
  * 
  * @param s 输入字符串
  * @param row 行坐标

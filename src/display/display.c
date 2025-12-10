@@ -64,7 +64,7 @@ void showBoard(const Board* board){
         printf("%c ", 'A'+i-1);
     }
     printf("\n");
-    system("pause");
+    // system("pause");
     return;
 }
 
@@ -90,6 +90,46 @@ void showWelcomeMsg(){
     printf("  2. 黑方触发禁手时，直接判负，白方获胜\n\n");
 
     printf("======================== GL & HF ========================\n");
+    system("pause");
+    return;
+}
+
+void showInputPrompt(Player current_player){
+    printf("落子列坐标范围A~O，行坐标范围1~15\n");
+    if(current_player == PLAYER_BLACK){
+        printf("您是黑方，请输入落子坐标：");
+    }
+    if(current_player == PLAYER_WHITE){
+        printf("您是白方，请输入落子坐标：");
+    }
+    return;
+}
+
+void getInput(char s[], int max_len){
+    char c;
+    int Index = 0;
+    while((c=getchar())!='\n'){
+        if(Index < max_len){
+            s[Index++] = c;
+        }
+    }
+    s[Index] = '\0';
+    return;
+}
+
+void showGameOver(GameStatus game_status){
+    if(game_status == BLACK_WIN){
+        printf("黑方获胜！游戏结束。\n");
+    }
+    if(game_status == WHITE_WIN){
+        printf("白方获胜！游戏结束。\n");
+    }
+    if(game_status == FORBIDDEN_MOVE){
+        printf("黑方出现禁手，白方获胜！游戏结束。\n");
+    }
+    if(game_status == DRAW){
+        printf("棋盘已满，和棋！游戏结束\n");
+    }
     system("pause");
     return;
 }

@@ -15,8 +15,6 @@
 #include<stdio.h>
 #include"../board/board.h"
 
-#define PLAYER_BLACK 1 //黑方玩家
-#define PLAYER_WHITE 2 //白方玩家
 #define CROSS "\xE2\x94\xBC"
 #define WHITE_PIECE "\xE2\x97\x8B"
 #define BLACK_PIECE "\xE2\x97\x8F"
@@ -32,15 +30,39 @@
 #define BOTTOM_EDGE "\xE2\x94\xBB"
 
 /**
+ * @brief 当前玩家 黑/白
+ * 
+ */
+typedef enum{
+    PLAYER_BLACK,
+    PLAYER_WHITE
+}Player;
+
+/**
+ * @brief 游戏状态：黑胜，白胜，黑禁手，和棋，正在游戏
+ * 
+ */
+typedef enum{
+    BLACK_WIN,
+    WHITE_WIN,
+    FORBIDDEN_MOVE,
+    DRAW,
+    PLAYING
+}GameStatus;
+
+/**
  * @brief 显示棋盘
  * 
  * @param board 棋盘
  */
 void showBoard(const Board* board);
 
-void showInputPrompt(int current_player);
-
-void showMessage(const char msg[]);
+/**
+ * @brief 用户输入的提示语
+ * 
+ * @param current_player 当前玩家
+ */
+void showInputPrompt(Player current_player);
 
 /**
  * @brief 开始游戏时的提示语
@@ -48,6 +70,19 @@ void showMessage(const char msg[]);
  */
 void showWelcomeMsg();
 
-void showGameOver(int result);
+/**
+ * @brief 游戏结束时的提示语
+ * 
+ * @param game_status 游戏结果
+ */
+void showGameOver(GameStatus game_status);
+
+/**
+ * @brief 读取用户输入的坐标
+ * 
+ * @param s 存储输入的字符串
+ * @param max_len 会被存储的最大字符个数
+ */
+void getInput(char s[], int max_len);
 
 #endif 
