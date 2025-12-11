@@ -10,14 +10,14 @@ add_compile_options(-Wall)
 include_directories(
     ${PROJECT_SOURCE_DIR}/src/board
     ${PROJECT_SOURCE_DIR}/src/display
-    #${PROJECT_SOURCE_DIR}/src/rule
+    ${PROJECT_SOURCE_DIR}/src/rule
 )
 
 set(MAIN_SOURCES
     src/main.c
     src/board/board.c
     src/display/display.c
-    #src/rule/rule.c
+    src/rule/rule.c
 )
 
 add_executable(P2PChessGame ${MAIN_SOURCES})
