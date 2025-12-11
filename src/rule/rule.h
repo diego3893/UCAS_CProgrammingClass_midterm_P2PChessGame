@@ -1,14 +1,32 @@
+/**
+ * @file rule.h
+ * @author diego3893 (diegozcx@foxmail.com)
+ * @brief 规则相关头文件
+ * @version 1.0
+ * @date 2025-12-11
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
 #ifndef RULE_H
 #define RULE_H
 
 #include"../board/board.h"
 #include"../display/display.h"
 
+/**
+ * @brief 控制坐标移动
+ * 
+ */
 typedef struct{
     int dx;
     int dy;
 }DeltaPair;
 
+/**
+ * @brief 当前棋子构成的棋型
+ * 
+ */
 typedef enum{
     LIVE_THREE,
     LIVE_FOUR,
@@ -18,6 +36,10 @@ typedef enum{
     CHESS_SHAPE_CNT
 }ChessShape;
 
+/**
+ * @brief 8个坐标移动的方向
+ * 
+ */
 #define DELTA_RIGHT ((DeltaPair){1, 0})   
 #define DELTA_DOWN ((DeltaPair){0, -1})  
 #define DELTA_LEFT ((DeltaPair){-1, 0}) 
@@ -27,18 +49,77 @@ typedef enum{
 #define DELTA_DOWNLEFT ((DeltaPair){-1, -1})
 #define DELTA_DOWNRIGHT ((DeltaPair){1, -1})
 
-GameStatus judgeResult(const Board* board, int row, int col, Player current_player);
+/**
+ * @brief 判断游戏状态
+ * 
+ * @param board 棋盘
+ * @param row 落子行坐标
+ * @param col 落子列坐标
+ * @param current_player 落子玩家 
+ * @return GameStatus 继续游戏，黑/白胜，禁手，平局
+ */
+GameStatus judgeStatus(const Board* board, int row, int col, Player current_player);
 
+/**
+ * @brief 统计当前棋子参与构成的棋型
+ * 
+ * @param board 棋盘
+ * @param row 棋子行坐标
+ * @param col 棋子列坐标
+ * @param chess_shape_cnt 存储各个棋型的统计值
+ * @param current_player 当前玩家
+ */
 void checkChessShape(const Board* board, int row, int col, int chess_shape_cnt[], Player current_player);
 
+/**
+ * @brief 统计活三个数（包括跳活三）
+ * 
+ * @param board 棋盘
+ * @param row 棋子行坐标
+ * @param col 棋子列坐标
+ * @return int 活三个数
+ */
 int checkLiveThree(const Board* board, int row, int col);
 
+/**
+ * @brief 统计活四个数
+ * 
+ * @param board 棋盘
+ * @param row 棋子行坐标
+ * @param col 棋子列坐标
+ * @return int 活四个数
+ */
 int checkLiveFour(const Board* board, int row, int col);
 
+/**
+ * @brief 统计冲四个数
+ * 
+ * @param board 棋盘
+ * @param row 棋子行坐标
+ * @param col 棋子列坐标
+ * @return int 冲四个数
+ */
 int checkBreakthroughFour(const Board* board, int row, int col);
 
+/**
+ * @brief 统计长连个数
+ * 
+ * @param board 棋盘
+ * @param row 棋子行坐标
+ * @param col 棋子列坐标
+ * @return int 长连个数
+ */
 int checkLongChain(const Board* board, int row, int col);
 
-int checkFiveInRow(const Board* board, int row, int col);
+/**
+ * @brief 统计五连个数
+ * 
+ * @param board 棋盘
+ * @param row 棋子行坐标
+ * @param col 棋子列坐标
+ * @param current_player 当前玩家
+ * @return int 五连个数
+ */
+int checkFiveInRow(const Board* board, int row, int col, Player current_player);
 
 #endif 
