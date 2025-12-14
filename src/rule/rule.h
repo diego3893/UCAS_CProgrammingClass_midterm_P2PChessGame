@@ -37,16 +37,12 @@ typedef enum{
 }ChessShape;
 
 /**
- * @brief 8个坐标移动的方向
+ * @brief 坐标移动的方向，通过正负号完成8个方向的移动
  * 
  */
 #define DELTA_RIGHT ((DeltaPair){1, 0})   
 #define DELTA_DOWN ((DeltaPair){0, -1})  
-#define DELTA_LEFT ((DeltaPair){-1, 0}) 
-#define DELTA_UP ((DeltaPair){0, 1}) 
 #define DELTA_UPRIGHT ((DeltaPair){1, 1}) 
-#define DELTA_UPLEFT ((DeltaPair){-1, 1}) 
-#define DELTA_DOWNLEFT ((DeltaPair){-1, -1})
 #define DELTA_DOWNRIGHT ((DeltaPair){1, -1})
 
 /**
@@ -122,4 +118,12 @@ int checkLongChain(const Board* board, int row, int col);
  */
 int checkFiveInRow(const Board* board, int row, int col, Player current_player);
 
+/**
+ * @brief 判断是否为禁手
+ * 
+ * @param chess_shape_cnt 统计的棋型数组
+ * @return true 是
+ * @return false 否
+ */
+bool isForbiddenMove(const int chess_shape_cnt[]);
 #endif 

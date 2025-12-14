@@ -130,6 +130,6 @@ void showGameOver(GameStatus game_status){
     if(game_status == DRAW){
         printf("棋盘已满，和棋！游戏结束\n");
     }
-    system("pause");
+    //system("pause");
     return;
 }
