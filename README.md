@@ -31,6 +31,7 @@ mingw32-make
 ```
 - 编译方法2：使用写好的批处理脚本，在根目录中输入下列指令`./cmake_build.bat`
 - 运行方法：双击build/中的P2PChessGame.exe或者在根目录中`./build/P2PChessGame.exe`
+- 测试方法：测试文件位于`./test/test_rule.c`，可以自行添加测试用例，编译内置于`CMakeLists.txt`中，编译后可执行文件为`./build/test_rule.exe`
 ## 文件结构
 
 本项目包含多个文件，在此节中说明文件组织结构
