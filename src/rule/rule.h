@@ -126,4 +126,17 @@ int checkFiveInRow(const Board* board, int row, int col, Player current_player);
  * @return false 否
  */
 bool isForbiddenMove(const int chess_shape_cnt[]);
+
+/**
+ * @brief 检查某个特定方向上连成的棋型，判断是否为活四或五连
+ * 
+ * @param board 棋盘
+ * @param row 行
+ * @param col 列
+ * @param num 相连棋子数
+ * @param dir 方向
+ * @return true 是
+ * @return false 否
+ */
+bool checkPieceInRowWithDir(const Board* board, int row, int col, int num, DeltaPair dir);
 #endif 

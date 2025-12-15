@@ -1,8 +1,7 @@
 #include "rule.h"
 
 /*
-活三、活四、冲四判断，空白点判断是否为禁手位
-考虑在棋盘中虚拟落子，判定结束后回溯？
+跳三、跳四判断
 */
 
 GameStatus judgeStatus(const Board* board, int row, int col, Player current_player){
@@ -105,19 +104,15 @@ int checkLongChain(const Board* board, int row, int col){
 
 int checkLiveThree(const Board* board, int row, int col){
     Piece color = BLACK;
-    Piece opp_color = WHITE;
     Piece p;
-
     DeltaPair dirs[] = {DELTA_RIGHT, DELTA_DOWN, DELTA_UPRIGHT, DELTA_DOWNRIGHT};
     int cnt = 0;
-
     for(int i=0; i<4; ++i){
+        int cnt_dir = 0;
         int dx = dirs[i].dx;
         int dy = dirs[i].dy;
-        int same = 1;  // 当前位置算一个
+        int same = 1;
         int blank_ends = 0;
-
-        // 正向检查
         int x = row+dx;
         int y = col+dy;
         while(x>=1 && x<=BOARD_SIZE && y>=1 && y<=BOARD_SIZE){
@@ -128,13 +123,14 @@ int checkLiveThree(const Board* board, int row, int col){
                 y += dy;
             }else if(p == BLANK){
                 blank_ends++;
+                if(checkPieceInRowWithDir(board, x, y, 4, dirs[i])){
+                    cnt_dir++;
+                }
                 break;
-            }else{  // 对方棋子阻挡
+            }else{
                 break;
             }
         }
-
-        // 反向检查
         x = row-dx;
         y = col-dy;
         while(x>=1 && x<=BOARD_SIZE && y>=1 && y<=BOARD_SIZE){
@@ -145,27 +141,54 @@ int checkLiveThree(const Board* board, int row, int col){
                 y -= dy;
             }else if(p == BLANK){
                 blank_ends++;
+                if(checkPieceInRowWithDir(board, x, y, 4, dirs[i])){
+                    cnt_dir++;
+                }
                 break;
-            }else{  // 对方棋子阻挡
+            }else{
                 break;
             }
         }
-
-        // 活三：3个同色棋子且两端均为空白
-        if(same == 3 && blank_ends == 2){
-            cnt++;
+        if(same==3 && blank_ends==2 && cnt_dir==2){
+            cnt_dir--;
         }
-        // 跳活三：中间空一个的活三（如 X X _ X 形态）
-        else if(same == 3 && blank_ends == 1){
-            // 检查是否存在跳位空白
-            int skip_x = row+dx * 2;
-            int skip_y = col+dy * 2;
-            if(skip_x >= 1 && skip_x <= BOARD_SIZE && skip_y >= 1 && skip_y <= BOARD_SIZE &&
-                getPiece(board, skip_x, skip_y) == color &&
-                getPiece(board, row+dx, col+dy) == BLANK){
-                cnt++;
-            }
-        }
+        cnt += cnt_dir;
+        // else if(same==2 && blank_ends==2){
+        //     int skip_x;
+        //     int skip_y;
+        //     skip_x = row+2*dx;
+        //     skip_y = col+2*dy;
+        //     if(skip_x>=1 && skip_x<=BOARD_SIZE && skip_y>=1 && skip_y<=BOARD_SIZE &&
+        //         getPiece(board, skip_x, skip_y)==color &&
+        //         1<=row+3*dx && row+3*dx<=BOARD_SIZE && 1<=col+3*dy && col+3*dy<=BOARD_SIZE &&
+        //         getPiece(board, row+3*dx, col+3*dy)==BLANK){
+        //         cnt++;
+        //     }
+        //     skip_x = row-2*dx;
+        //     skip_y = col-2*dy;
+        //     if(skip_x>=1 && skip_x<=BOARD_SIZE && skip_y>=1 && skip_y<=BOARD_SIZE &&
+        //         getPiece(board, skip_x, skip_y)==color &&
+        //         1<=row-3*dx && row-3*dx<=BOARD_SIZE && 1<=col-3*dy && col-3*dy<=BOARD_SIZE &&
+        //         getPiece(board, row-3*dx, col-3*dy)==BLANK){
+        //         cnt++;
+        //     }
+        //     skip_x = row-3*dx;
+        //     skip_y = col-3*dy;
+        //     if(skip_x>=1 && skip_x<=BOARD_SIZE && skip_y>=1 && skip_y<=BOARD_SIZE &&
+        //         getPiece(board, skip_x, skip_y)==color &&
+        //         1<=row-4*dx && row-4*dx<=BOARD_SIZE && 1<=col-4*dy && col-4*dy<=BOARD_SIZE &&
+        //         getPiece(board, row-4*dx, col-4*dy)==BLANK){
+        //         cnt++;
+        //     }
+        //     skip_x = row+3*dx;
+        //     skip_y = col+3*dy;
+        //     if(skip_x>=1 && skip_x<=BOARD_SIZE && skip_y>=1 && skip_y<=BOARD_SIZE &&
+        //         getPiece(board, skip_x, skip_y)==color &&
+        //         1<=row+4*dx && row+4*dx<=BOARD_SIZE && 1<=col+4*dy && col+4*dy<=BOARD_SIZE &&
+        //         getPiece(board, row+4*dx, col+4*dy)==BLANK){
+        //         cnt++;
+        //     }
+        // }
     }
 
     return cnt;
@@ -213,7 +236,7 @@ int checkBreakthroughFour(const Board* board, int row, int col){
     Piece p;
     DeltaPair dirs[] = {DELTA_RIGHT, DELTA_DOWN, DELTA_UPRIGHT, DELTA_DOWNRIGHT};
     int cnt = 0;
-    int chess_shape_cnt = {0};
+    // int chess_shape_cnt = {0};
     for(int i=0; i<4; ++i){
         int dx = dirs[i].dx;
         int dy = dirs[i].dy;
@@ -233,6 +256,9 @@ int checkBreakthroughFour(const Board* board, int row, int col){
                 break;
             }else{
                 blanks++;
+                if(checkPieceInRowWithDir(board, x, y, 5, dirs[i])){
+                    cnt++;
+                }
                 break;
             }
         }
@@ -249,11 +275,14 @@ int checkBreakthroughFour(const Board* board, int row, int col){
                 break;
             }else{
                 blanks++;
+                if(checkPieceInRowWithDir(board, x, y, 5, dirs[i])){
+                    cnt++;
+                }
                 break;
             }
         }
-        if(same == 4 && blocks == 1 && blanks == 1){
-            cnt++;
+        if(same == 4 && blocks == 0 && blanks == 2){
+            cnt -= 2;
         }
     }
     return cnt;
@@ -268,6 +297,45 @@ bool isForbiddenMove(const int chess_shape_cnt[]){
     }
     if(chess_shape_cnt[LIVE_FOUR]+chess_shape_cnt[BREAKTHROUGH_FOUR] >= 2){
         return true;
+    }
+    return false;
+}
+
+bool checkPieceInRowWithDir(const Board* board, int row, int col, int num, DeltaPair dir){
+    Piece color = BLACK;
+    int dx = dir.dx;
+    int dy = dir.dy;
+    int same = 1; 
+    int blank_ends = 0;
+    int x = row+dx;
+    int y = col+dy;
+    while(x>=1 && x<=BOARD_SIZE && y>=1 && y<=BOARD_SIZE && getPiece(board, x, y)==color){
+        same++;
+        x += dx;
+        y += dy;
+    }
+    if(x>=1 && x<=BOARD_SIZE && y>=1 && y<=BOARD_SIZE && getPiece(board, x, y)==BLANK){
+        blank_ends++;
+    }
+    x = row-dx;
+    y = col-dy;
+    while(x>=1 && x<=BOARD_SIZE && y>=1 && y<=BOARD_SIZE && getPiece(board, x, y)==color){
+        same++;
+        x -= dx;
+        y -= dy;
+    }
+    if(x>=1 && x<=BOARD_SIZE && y>=1 && y<=BOARD_SIZE && getPiece(board, x, y)==BLANK){
+        blank_ends++;
+    }
+    if(num == 4){
+        if(same==4 && blank_ends==2){
+            return true;
+        }
+    }
+    if(num == 5){
+        if(same == 5){
+            return true;
+        }
     }
     return false;
 }
