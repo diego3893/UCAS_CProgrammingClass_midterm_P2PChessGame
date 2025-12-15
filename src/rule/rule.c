@@ -153,42 +153,6 @@ int checkLiveThree(const Board* board, int row, int col){
             cnt_dir--;
         }
         cnt += cnt_dir;
-        // else if(same==2 && blank_ends==2){
-        //     int skip_x;
-        //     int skip_y;
-        //     skip_x = row+2*dx;
-        //     skip_y = col+2*dy;
-        //     if(skip_x>=1 && skip_x<=BOARD_SIZE && skip_y>=1 && skip_y<=BOARD_SIZE &&
-        //         getPiece(board, skip_x, skip_y)==color &&
-        //         1<=row+3*dx && row+3*dx<=BOARD_SIZE && 1<=col+3*dy && col+3*dy<=BOARD_SIZE &&
-        //         getPiece(board, row+3*dx, col+3*dy)==BLANK){
-        //         cnt++;
-        //     }
-        //     skip_x = row-2*dx;
-        //     skip_y = col-2*dy;
-        //     if(skip_x>=1 && skip_x<=BOARD_SIZE && skip_y>=1 && skip_y<=BOARD_SIZE &&
-        //         getPiece(board, skip_x, skip_y)==color &&
-        //         1<=row-3*dx && row-3*dx<=BOARD_SIZE && 1<=col-3*dy && col-3*dy<=BOARD_SIZE &&
-        //         getPiece(board, row-3*dx, col-3*dy)==BLANK){
-        //         cnt++;
-        //     }
-        //     skip_x = row-3*dx;
-        //     skip_y = col-3*dy;
-        //     if(skip_x>=1 && skip_x<=BOARD_SIZE && skip_y>=1 && skip_y<=BOARD_SIZE &&
-        //         getPiece(board, skip_x, skip_y)==color &&
-        //         1<=row-4*dx && row-4*dx<=BOARD_SIZE && 1<=col-4*dy && col-4*dy<=BOARD_SIZE &&
-        //         getPiece(board, row-4*dx, col-4*dy)==BLANK){
-        //         cnt++;
-        //     }
-        //     skip_x = row+3*dx;
-        //     skip_y = col+3*dy;
-        //     if(skip_x>=1 && skip_x<=BOARD_SIZE && skip_y>=1 && skip_y<=BOARD_SIZE &&
-        //         getPiece(board, skip_x, skip_y)==color &&
-        //         1<=row+4*dx && row+4*dx<=BOARD_SIZE && 1<=col+4*dy && col+4*dy<=BOARD_SIZE &&
-        //         getPiece(board, row+4*dx, col+4*dy)==BLANK){
-        //         cnt++;
-        //     }
-        // }
     }
 
     return cnt;
