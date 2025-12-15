@@ -1,8 +1,7 @@
 #include "rule.h"
 
 /*
-活三、活四、冲四判断，空白点判断是否为禁手位
-考虑在棋盘中虚拟落子，判定结束后回溯？
+跳四（冲四）判断/双向判断
 */
 
 GameStatus judgeStatus(const Board* board, int row, int col, Player current_player){
@@ -105,19 +104,15 @@ int checkLongChain(const Board* board, int row, int col){
 
 int checkLiveThree(const Board* board, int row, int col){
     Piece color = BLACK;
-    Piece opp_color = WHITE;
     Piece p;
-
     DeltaPair dirs[] = {DELTA_RIGHT, DELTA_DOWN, DELTA_UPRIGHT, DELTA_DOWNRIGHT};
     int cnt = 0;
-
     for(int i=0; i<4; ++i){
+        bool flag_can_form_live_four = false;
         int dx = dirs[i].dx;
         int dy = dirs[i].dy;
-        int same = 1;  // 当前位置算一个
+        int same = 1; 
         int blank_ends = 0;
-
-        // 正向检查
         int x = row+dx;
         int y = col+dy;
         while(x>=1 && x<=BOARD_SIZE && y>=1 && y<=BOARD_SIZE){
@@ -127,14 +122,17 @@ int checkLiveThree(const Board* board, int row, int col){
                 x += dx;
                 y += dy;
             }else if(p == BLANK){
-                blank_ends++;
+                if(!isForbiddenPosition(board, x, y)){
+                    blank_ends++;
+                    if(checkCanFormLiveFour(board, x, y, dirs[i])){
+                        flag_can_form_live_four = true;
+                    }
+                }
                 break;
-            }else{  // 对方棋子阻挡
+            }else{
                 break;
             }
         }
-
-        // 反向检查
         x = row-dx;
         y = col-dy;
         while(x>=1 && x<=BOARD_SIZE && y>=1 && y<=BOARD_SIZE){
@@ -144,30 +142,25 @@ int checkLiveThree(const Board* board, int row, int col){
                 x -= dx;
                 y -= dy;
             }else if(p == BLANK){
-                blank_ends++;
+                if(!isForbiddenPosition(board, x, y)){
+                    blank_ends++;
+                    if(checkCanFormLiveFour(board, x, y, dirs[i])){
+                        flag_can_form_live_four = true;
+                    }
+                }
                 break;
-            }else{  // 对方棋子阻挡
+            }else{
                 break;
             }
         }
-
-        // 活三：3个同色棋子且两端均为空白
-        if(same == 3 && blank_ends == 2){
+        if(same==3 && blank_ends==2 && flag_can_form_live_four){
+            cnt++;
+        }else if(same==2 && blank_ends==2 && flag_can_form_live_four){
+            cnt++;
+        }else if(same==1 && blank_ends==2 && flag_can_form_live_four){
             cnt++;
         }
-        // 跳活三：中间空一个的活三（如 X X _ X 形态）
-        else if(same == 3 && blank_ends == 1){
-            // 检查是否存在跳位空白
-            int skip_x = row+dx * 2;
-            int skip_y = col+dy * 2;
-            if(skip_x >= 1 && skip_x <= BOARD_SIZE && skip_y >= 1 && skip_y <= BOARD_SIZE &&
-                getPiece(board, skip_x, skip_y) == color &&
-                getPiece(board, row+dx, col+dy) == BLANK){
-                cnt++;
-            }
-        }
     }
-
     return cnt;
 }
 
@@ -188,7 +181,9 @@ int checkLiveFour(const Board* board, int row, int col){
             y += dy;
         }
         if(x>=1 && x<=BOARD_SIZE && y>=1 && y<=BOARD_SIZE && getPiece(board, x, y)==BLANK){
-            blank_ends++;
+            if(!isForbiddenPosition(board, x, y)){
+                blank_ends++;
+            }
         }
         x = row-dx;
         y = col-dy;
@@ -198,7 +193,9 @@ int checkLiveFour(const Board* board, int row, int col){
             y -= dy;
         }
         if(x>=1 && x<=BOARD_SIZE && y>=1 && y<=BOARD_SIZE && getPiece(board, x, y)==BLANK){
-            blank_ends++;
+            if(!isForbiddenPosition(board, x, y)){
+                blank_ends++;
+            }
         }
         if(same==4 && blank_ends==2){
             cnt++;
@@ -213,7 +210,6 @@ int checkBreakthroughFour(const Board* board, int row, int col){
     Piece p;
     DeltaPair dirs[] = {DELTA_RIGHT, DELTA_DOWN, DELTA_UPRIGHT, DELTA_DOWNRIGHT};
     int cnt = 0;
-    int chess_shape_cnt = {0};
     for(int i=0; i<4; ++i){
         int dx = dirs[i].dx;
         int dy = dirs[i].dy;
@@ -232,7 +228,11 @@ int checkBreakthroughFour(const Board* board, int row, int col){
                 blocks++;
                 break;
             }else{
-                blanks++;
+                if(!isForbiddenPosition(board, x, y)){
+                    blanks++;
+                }else{
+                    blocks++;
+                }
                 break;
             }
         }
@@ -248,7 +248,11 @@ int checkBreakthroughFour(const Board* board, int row, int col){
                 blocks++;
                 break;
             }else{
-                blanks++;
+                if(!isForbiddenPosition(board, x, y)){
+                    blanks++;
+                }else{
+                    blocks++;
+                }
                 break;
             }
         }
@@ -267,6 +271,68 @@ bool isForbiddenMove(const int chess_shape_cnt[]){
         return true;
     }
     if(chess_shape_cnt[LIVE_FOUR]+chess_shape_cnt[BREAKTHROUGH_FOUR] >= 2){
+        return true;
+    }
+    return false;
+}
+
+bool isForbiddenPosition(const Board* board, int row, int col){
+    if(row<1 || row>BOARD_SIZE || col<1 || col>BOARD_SIZE){
+        return false;
+    }
+    if(getPiece(board, row, col) != BLANK){
+        return false;
+    }
+    Board temp_board;
+    memcpy(&temp_board, board, sizeof(Board));
+    if(dropPiece(&temp_board, row, col, BLACK) != 1){
+        return false; 
+    }
+    int chess_shape_cnt[CHESS_SHAPE_CNT] = {0};
+    checkChessShape(&temp_board, row, col, chess_shape_cnt, PLAYER_BLACK);
+    return isForbiddenMove(chess_shape_cnt);
+}
+
+bool checkCanFormLiveFour(const Board* board, int row, int col, DeltaPair dir){
+    if (getPiece(board, row, col) != BLANK) {
+        return 0;
+    }
+    Piece color = BLACK, opp_color = WHITE;
+    int dx = dir.dx;
+    int dy = dir.dy;
+    int same = 1; 
+    int blank_ends = 0;
+    int x = row+dx;
+    int y = col+dy;
+    while(x>=1 && x<=BOARD_SIZE && y>=1 && y<=BOARD_SIZE && getPiece(board, x, y)==color){
+        same++;
+        x += dx;
+        y += dy;
+    }
+    if(x>=1 && x<=BOARD_SIZE && y>=1 && y<=BOARD_SIZE && getPiece(board, x, y)==BLANK){
+        if(!isForbiddenPosition(board, x, y)){
+            blank_ends++;
+        }
+    }
+    if(x>=1 && x<=BOARD_SIZE && y>=1 && y<=BOARD_SIZE && getPiece(board, x, y)==opp_color){
+        return false;
+    }
+    x = row-dx;
+    y = col-dy;
+    while(x>=1 && x<=BOARD_SIZE && y>=1 && y<=BOARD_SIZE && getPiece(board, x, y)==color){
+        same++;
+        x -= dx;
+        y -= dy;
+    }
+    if(x>=1 && x<=BOARD_SIZE && y>=1 && y<=BOARD_SIZE && getPiece(board, x, y)==BLANK){
+        if(!isForbiddenPosition(board, x, y)){
+            blank_ends++;
+        }
+    }
+    if(x>=1 && x<=BOARD_SIZE && y>=1 && y<=BOARD_SIZE && getPiece(board, x, y)==opp_color){
+        return false;
+    }
+    if(same==4 && blank_ends==2){
         return true;
     }
     return false;
