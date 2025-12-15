@@ -25,9 +25,9 @@
  * 
  */
 typedef enum{
+    BLANK,
     BLACK,
-    WHITE,
-    BLANK
+    WHITE
 }Piece;
 
 /**
