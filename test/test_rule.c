@@ -23,6 +23,15 @@ void initTestBoard(Board* board, Piece pieces[BOARD_SIZE+1][BOARD_SIZE+1]) {
     }
 }
 
+void printCnt(int shape_cnt[]){
+    printf("五连：%d\n", shape_cnt[FIVE_IN_ROW]);
+    printf("长连：%d\n", shape_cnt[LONG_CHAIN]);
+    printf("活三：%d\n", shape_cnt[LIVE_THREE]);
+    printf("活四：%d\n", shape_cnt[LIVE_FOUR]);
+    printf("冲四：%d\n", shape_cnt[BREAKTHROUGH_FOUR]);
+    return;
+}
+
 bool testFiveInRowVertical() {
     Board board;
     Piece pieces[BOARD_SIZE+1][BOARD_SIZE+1] = {0};
@@ -33,8 +42,10 @@ bool testFiveInRowVertical() {
     pieces[7][5] = BLACK;
     initTestBoard(&board, pieces);
 
-    int cnt = checkFiveInRow(&board, 5, 5, PLAYER_BLACK);
-    ASSERT(cnt >= 1, "纵向五连判定失败");
+    int shape_cnt[CHESS_SHAPE_CNT] = {0};
+    checkChessShape(&board, 5, 5, shape_cnt, PLAYER_BLACK);
+    printCnt(shape_cnt);
+    ASSERT(shape_cnt[FIVE_IN_ROW] == 1, "纵向五连判定失败");
     printf("测试通过: 纵向五连\n");
     return true;
 }
@@ -49,8 +60,10 @@ bool testFiveInRowDiagonal1() {
     pieces[7][7] = BLACK;
     initTestBoard(&board, pieces);
 
-    int cnt = checkFiveInRow(&board, 5, 5, PLAYER_BLACK);
-    ASSERT(cnt >= 1, "正斜向五连判定失败");
+    int shape_cnt[CHESS_SHAPE_CNT] = {0};
+    checkChessShape(&board, 5, 5, shape_cnt, PLAYER_BLACK);
+    printCnt(shape_cnt);
+    ASSERT(shape_cnt[FIVE_IN_ROW] == 1, "正斜向五连判定失败");
     printf("测试通过: 正斜向五连\n");
     return true;
 }
@@ -65,8 +78,10 @@ bool testFiveInRowDiagonal2() {
     pieces[7][3] = BLACK;
     initTestBoard(&board, pieces);
 
-    int cnt = checkFiveInRow(&board, 5, 5, PLAYER_BLACK);
-    ASSERT(cnt >= 1, "反斜向五连判定失败");
+    int shape_cnt[CHESS_SHAPE_CNT] = {0};
+    checkChessShape(&board, 5, 5, shape_cnt, PLAYER_BLACK);
+    printCnt(shape_cnt);
+    ASSERT(shape_cnt[FIVE_IN_ROW] == 1, "反斜向五连判定失败");
     printf("测试通过: 反斜向五连\n");
     return true;
 }
@@ -82,8 +97,10 @@ bool testLongChainVertical() {
     pieces[7][5] = BLACK;
     initTestBoard(&board, pieces);
 
-    int cnt = checkLongChain(&board, 5, 5);
-    ASSERT(cnt >= 1, "纵向长连判定失败");
+    int shape_cnt[CHESS_SHAPE_CNT] = {0};
+    checkChessShape(&board, 5, 5, shape_cnt, PLAYER_BLACK);
+    printCnt(shape_cnt);
+    ASSERT(shape_cnt[LONG_CHAIN] == 1, "纵向长连判定失败");
     printf("测试通过: 纵向长连\n");
     return true;
 }
@@ -99,8 +116,10 @@ bool testLongChainDiagonal() {
     pieces[7][7] = BLACK;
     initTestBoard(&board, pieces);
 
-    int cnt = checkLongChain(&board, 5, 5);
-    ASSERT(cnt >= 1, "斜向长连判定失败");
+    int shape_cnt[CHESS_SHAPE_CNT] = {0};
+    checkChessShape(&board, 5, 5, shape_cnt, PLAYER_BLACK);
+    printCnt(shape_cnt);
+    ASSERT(shape_cnt[LONG_CHAIN] == 1, "斜向长连判定失败");
     printf("测试通过: 斜向长连\n");
     return true;
 }
@@ -117,7 +136,8 @@ bool testDoubleLiveThree1() {
 
     int shape_cnt[CHESS_SHAPE_CNT] = {0};
     checkChessShape(&board, 5, 5, shape_cnt, PLAYER_BLACK);
-    ASSERT(shape_cnt[LIVE_THREE] >= 2 && isForbiddenMove(shape_cnt), "横向+斜向双活三判定失败");
+    printCnt(shape_cnt);
+    ASSERT(shape_cnt[LIVE_THREE] == 2 && isForbiddenMove(shape_cnt), "横向+斜向双活三判定失败");
     printf("测试通过: 横向+斜向双活三\n");
     return true;
 }
@@ -134,7 +154,8 @@ bool testDoubleLiveThree2() {
 
     int shape_cnt[CHESS_SHAPE_CNT] = {0};
     checkChessShape(&board, 5, 5, shape_cnt, PLAYER_BLACK);
-    ASSERT(shape_cnt[LIVE_THREE] >= 2 && isForbiddenMove(shape_cnt), "跳活三+普通活三判定失败");
+    printCnt(shape_cnt);
+    ASSERT(shape_cnt[LIVE_THREE] == 2 && isForbiddenMove(shape_cnt), "跳活三+普通活三判定失败");
     printf("测试通过: 跳活三+普通活三\n");
     return true;
 }
@@ -153,7 +174,8 @@ bool testDoubleLiveFour() {
 
     int shape_cnt[CHESS_SHAPE_CNT] = {0};
     checkChessShape(&board, 5, 5, shape_cnt, PLAYER_BLACK);
-    ASSERT((shape_cnt[LIVE_FOUR] >= 2) && isForbiddenMove(shape_cnt), "双活四判定失败");
+    printCnt(shape_cnt);
+    ASSERT((shape_cnt[LIVE_FOUR] == 2) && isForbiddenMove(shape_cnt), "双活四判定失败");
     printf("测试通过: 双活四\n");
     return true;
 }
@@ -173,7 +195,8 @@ bool testLiveFourPlusBreakthrough() {
 
     int shape_cnt[CHESS_SHAPE_CNT] = {0};
     checkChessShape(&board, 5, 5, shape_cnt, PLAYER_BLACK);
-    ASSERT((shape_cnt[LIVE_FOUR] >= 1 && shape_cnt[BREAKTHROUGH_FOUR] >= 1) && isForbiddenMove(shape_cnt), "活四+冲四判定失败");
+    printCnt(shape_cnt);
+    ASSERT((shape_cnt[LIVE_FOUR] == 1 && shape_cnt[BREAKTHROUGH_FOUR] == 1) && isForbiddenMove(shape_cnt), "活四+冲四判定失败");
     printf("测试通过: 活四+冲四\n");
     return true;
 }
@@ -194,7 +217,8 @@ bool testDoubleBreakthroughFour() {
 
     int shape_cnt[CHESS_SHAPE_CNT] = {0};
     checkChessShape(&board, 5, 5, shape_cnt, PLAYER_BLACK);
-    ASSERT(shape_cnt[BREAKTHROUGH_FOUR] >= 2 && isForbiddenMove(shape_cnt), "普通双冲四判定失败");
+    printCnt(shape_cnt);
+    ASSERT(shape_cnt[BREAKTHROUGH_FOUR] == 2 && isForbiddenMove(shape_cnt), "普通双冲四判定失败");
     printf("测试通过: 普通双冲四\n");
     return true;
 }
@@ -213,7 +237,8 @@ bool testDoubleBreakthroughFour2() {
 
     int shape_cnt[CHESS_SHAPE_CNT] = {0};
     checkChessShape(&board, 5, 6, shape_cnt, PLAYER_BLACK);
-    ASSERT(shape_cnt[BREAKTHROUGH_FOUR] >= 2 && isForbiddenMove(shape_cnt), "双向二跳四判定失败");
+    printCnt(shape_cnt);
+    ASSERT(shape_cnt[BREAKTHROUGH_FOUR] == 2 && isForbiddenMove(shape_cnt), "双向二跳四判定失败");
     printf("测试通过: 双向二跳四\n");
     return true;
 }
@@ -227,15 +252,73 @@ bool testSpecialBreakthroughFour() {
     pieces[5][4] = BLACK; 
     pieces[5][6] = BLACK;
     pieces[6][5] = BLACK;
-    pieces[6][6] = BLACK;
-    pieces[6][7] = BLACK;
-    pieces[6][8] = BLACK;
+    pieces[7][5] = BLACK;
+    pieces[8][5] = BLACK;
+    pieces[9][5] = BLACK;
     initTestBoard(&board, pieces);
 
     int shape_cnt[CHESS_SHAPE_CNT] = {0};
-    checkChessShape(&board, 6, 8, shape_cnt, PLAYER_BLACK);
-    ASSERT(shape_cnt[BREAKTHROUGH_FOUR] >= 1 && isForbiddenMove(shape_cnt), "特殊冲四（单边禁手）判定失败");
+    checkChessShape(&board, 9, 5, shape_cnt, PLAYER_BLACK);
+    printCnt(shape_cnt);
+    ASSERT(shape_cnt[BREAKTHROUGH_FOUR] == 1, "特殊冲四（单边禁手）判定失败");
     printf("测试通过: 特殊冲四（单边禁手）\n");
+    return true;
+}
+
+bool testSingleLiveThree() {
+    Board board;
+    Piece pieces[BOARD_SIZE+1][BOARD_SIZE+1] = {0};
+    pieces[5][4] = BLACK;
+    pieces[5][5] = BLACK;
+    pieces[5][6] = BLACK;
+
+    initTestBoard(&board, pieces);
+
+    int shape_cnt[CHESS_SHAPE_CNT] = {0};
+    checkChessShape(&board, 5, 5, shape_cnt, PLAYER_BLACK);
+    printCnt(shape_cnt);
+    ASSERT(shape_cnt[LIVE_THREE] == 1 && shape_cnt[LIVE_FOUR] == 0 && shape_cnt[BREAKTHROUGH_FOUR] == 0, "单个活三判定失败");
+    printf("测试通过: 单个活三\n");
+    return true;
+}
+
+
+bool testSingleLiveFour() {
+    Board board;
+    Piece pieces[BOARD_SIZE+1][BOARD_SIZE+1] = {0};
+    pieces[5][4] = BLACK;
+    pieces[5][5] = BLACK;
+    pieces[5][6] = BLACK;
+    pieces[5][7] = BLACK;
+
+    initTestBoard(&board, pieces);
+
+    int shape_cnt[CHESS_SHAPE_CNT] = {0};
+    memset(shape_cnt, 0, sizeof(shape_cnt));
+    checkChessShape(&board, 5, 5, shape_cnt, PLAYER_BLACK);
+    printCnt(shape_cnt);
+    ASSERT(shape_cnt[LIVE_FOUR] == 1 && shape_cnt[LIVE_THREE] == 0 && shape_cnt[BREAKTHROUGH_FOUR] == 0, "单个活四判定失败");
+    printf("测试通过: 单个活四\n");
+    return true;
+}
+
+bool testSingleBreakthroughFour() {
+    Board board;
+    Piece pieces[BOARD_SIZE+1][BOARD_SIZE+1] = {0};
+    pieces[5][4] = BLACK;
+    pieces[5][5] = BLACK;
+    pieces[5][6] = BLACK;
+    pieces[5][7] = BLACK;
+    pieces[5][8] = WHITE; 
+
+    initTestBoard(&board, pieces);
+
+    int shape_cnt[CHESS_SHAPE_CNT] = {0};
+    memset(shape_cnt, 0, sizeof(shape_cnt));
+    checkChessShape(&board, 5, 5, shape_cnt, PLAYER_BLACK);
+    printCnt(shape_cnt);
+    ASSERT(shape_cnt[BREAKTHROUGH_FOUR] == 1 && shape_cnt[LIVE_THREE] == 0 && shape_cnt[LIVE_FOUR] == 0, "单个冲四判定失败");
+    printf("测试通过: 单个冲四\n");
     return true;
 }
 
@@ -260,6 +343,10 @@ int main() {
     all_pass &= testDoubleBreakthroughFour();
     all_pass &= testDoubleBreakthroughFour2();
     all_pass &= testSpecialBreakthroughFour();
+
+    all_pass &= testSingleBreakthroughFour();
+    all_pass &= testSingleLiveFour();
+    all_pass &= testSingleLiveThree();
 
     printf("\n===== 测试结束 =====\n");
     if (all_pass) {

@@ -139,4 +139,15 @@ bool isForbiddenMove(const int chess_shape_cnt[]);
  * @return false 否
  */
 bool checkPieceInRowWithDir(const Board* board, int row, int col, int num, Pair dir);
+
+/**
+ * @brief 模拟落子，判断空白位置是否为禁手点位
+ * 
+ * @param board 棋盘
+ * @param row 目标行
+ * @param col 目标列
+ * @return true 该点位为禁手点位
+ * @return false 该点位不是禁手点位
+ */
+bool isForbiddenPosition(const Board* board, int row, int col);
 #endif 
