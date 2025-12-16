@@ -322,6 +322,32 @@ bool testSingleBreakthroughFour() {
     return true;
 }
 
+//参考 五子棋禁手规则详解.pdf 第12页
+bool testFinal() {
+    Board board;
+    Piece pieces[BOARD_SIZE+1][BOARD_SIZE+1] = {0};
+    pieces[12][6] = BLACK;
+    pieces[11][7] = BLACK;
+    pieces[10][8] = BLACK;
+    pieces[8][4] = BLACK; 
+    pieces[8][5] = BLACK;
+    pieces[8][6] = BLACK;
+    pieces[8][7] = BLACK;
+    pieces[7][5] = BLACK;
+    pieces[6][4] = BLACK;
+    pieces[5][3] = BLACK;
+    pieces[4][2] = WHITE;
+    initTestBoard(&board, pieces);
+
+    int shape_cnt[CHESS_SHAPE_CNT] = {0};
+    checkChessShape(&board, 8, 6, shape_cnt, PLAYER_BLACK);
+    printCnt(shape_cnt);
+    ASSERT(shape_cnt[LIVE_FOUR]==1 && shape_cnt[BREAKTHROUGH_FOUR]==0, "复杂禁手测试失败");
+    printf("测试通过: 复杂禁手\n");
+    return true;
+}
+
+
 int main() {
     SetConsoleOutputCP(65001);
     SetConsoleCP(65001);
@@ -347,6 +373,8 @@ int main() {
     all_pass &= testSingleBreakthroughFour();
     all_pass &= testSingleLiveFour();
     all_pass &= testSingleLiveThree();
+
+    all_pass &= testFinal();
 
     printf("\n===== 测试结束 =====\n");
     if (all_pass) {
