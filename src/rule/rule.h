@@ -19,9 +19,9 @@
  * 
  */
 typedef struct{
-    int dx;
-    int dy;
-}DeltaPair;
+    int x;
+    int y;
+}Pair;
 
 /**
  * @brief 当前棋子构成的棋型
@@ -40,10 +40,10 @@ typedef enum{
  * @brief 坐标移动的方向，通过正负号完成8个方向的移动
  * 
  */
-#define DELTA_RIGHT ((DeltaPair){1, 0})   
-#define DELTA_DOWN ((DeltaPair){0, -1})  
-#define DELTA_UPRIGHT ((DeltaPair){1, 1}) 
-#define DELTA_DOWNRIGHT ((DeltaPair){1, -1})
+#define DELTA_RIGHT ((Pair){1, 0})   
+#define DELTA_DOWN ((Pair){0, -1})  
+#define DELTA_UPRIGHT ((Pair){1, 1}) 
+#define DELTA_DOWNRIGHT ((Pair){1, -1})
 
 /**
  * @brief 判断游戏状态
@@ -138,5 +138,5 @@ bool isForbiddenMove(const int chess_shape_cnt[]);
  * @return true 是
  * @return false 否
  */
-bool checkPieceInRowWithDir(const Board* board, int row, int col, int num, DeltaPair dir);
+bool checkPieceInRowWithDir(const Board* board, int row, int col, int num, Pair dir);
 #endif 

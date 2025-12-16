@@ -40,11 +40,11 @@ void checkChessShape(const Board* board, int row, int col, int chess_shape_cnt[]
 
 int checkFiveInRow(const Board* board, int row, int col, Player current_player){
     Piece color = (current_player==PLAYER_BLACK) ? BLACK : WHITE;
-    DeltaPair dirs[] = {DELTA_RIGHT, DELTA_DOWN, DELTA_UPRIGHT, DELTA_DOWNRIGHT};
+    Pair dirs[] = {DELTA_RIGHT, DELTA_DOWN, DELTA_UPRIGHT, DELTA_DOWNRIGHT};
     int cnt = 0;
     for(int i=0; i<4; ++i){
-        int dx = dirs[i].dx;
-        int dy = dirs[i].dy;
+        int dx = dirs[i].x;
+        int dy = dirs[i].y;
         int length = 1;
         int x = row+dx;
         int y = col+dy;
@@ -75,11 +75,11 @@ int checkFiveInRow(const Board* board, int row, int col, Player current_player){
 
 int checkLongChain(const Board* board, int row, int col){
     Piece color = BLACK;
-    DeltaPair dirs[] = {DELTA_RIGHT, DELTA_DOWN, DELTA_UPRIGHT, DELTA_DOWNRIGHT};
+    Pair dirs[] = {DELTA_RIGHT, DELTA_DOWN, DELTA_UPRIGHT, DELTA_DOWNRIGHT};
     int cnt = 0;
     for(int i=0; i<4; ++i){
-        int dx = dirs[i].dx;
-        int dy = dirs[i].dy;
+        int dx = dirs[i].x;
+        int dy = dirs[i].y;
         int length = 1;
         int x = row+dx;
         int y = col+dy;
@@ -105,12 +105,12 @@ int checkLongChain(const Board* board, int row, int col){
 int checkLiveThree(const Board* board, int row, int col){
     Piece color = BLACK;
     Piece p;
-    DeltaPair dirs[] = {DELTA_RIGHT, DELTA_DOWN, DELTA_UPRIGHT, DELTA_DOWNRIGHT};
+    Pair dirs[] = {DELTA_RIGHT, DELTA_DOWN, DELTA_UPRIGHT, DELTA_DOWNRIGHT};
     int cnt = 0;
     for(int i=0; i<4; ++i){
         int cnt_dir = 0;
-        int dx = dirs[i].dx;
-        int dy = dirs[i].dy;
+        int dx = dirs[i].x;
+        int dy = dirs[i].y;
         int same = 1;
         int blank_ends = 0;
         int x = row+dx;
@@ -160,11 +160,11 @@ int checkLiveThree(const Board* board, int row, int col){
 
 int checkLiveFour(const Board* board, int row, int col){
     Piece color = BLACK;
-    DeltaPair dirs[] = {DELTA_RIGHT, DELTA_DOWN, DELTA_UPRIGHT, DELTA_DOWNRIGHT};
+    Pair dirs[] = {DELTA_RIGHT, DELTA_DOWN, DELTA_UPRIGHT, DELTA_DOWNRIGHT};
     int cnt = 0;
     for(int i=0; i<4; ++i){
-        int dx = dirs[i].dx;
-        int dy = dirs[i].dy;
+        int dx = dirs[i].x;
+        int dy = dirs[i].y;
         int same = 1; 
         int blank_ends = 0;
         int x = row+dx;
@@ -198,12 +198,12 @@ int checkBreakthroughFour(const Board* board, int row, int col){
     Piece color = BLACK;
     Piece opp_color = WHITE;
     Piece p;
-    DeltaPair dirs[] = {DELTA_RIGHT, DELTA_DOWN, DELTA_UPRIGHT, DELTA_DOWNRIGHT};
+    Pair dirs[] = {DELTA_RIGHT, DELTA_DOWN, DELTA_UPRIGHT, DELTA_DOWNRIGHT};
     int cnt = 0;
     // int chess_shape_cnt = {0};
     for(int i=0; i<4; ++i){
-        int dx = dirs[i].dx;
-        int dy = dirs[i].dy;
+        int dx = dirs[i].x;
+        int dy = dirs[i].y;
         int same = 1; 
         int blocks = 0; 
         int blanks = 0; 
@@ -265,10 +265,10 @@ bool isForbiddenMove(const int chess_shape_cnt[]){
     return false;
 }
 
-bool checkPieceInRowWithDir(const Board* board, int row, int col, int num, DeltaPair dir){
+bool checkPieceInRowWithDir(const Board* board, int row, int col, int num, Pair dir){
     Piece color = BLACK;
-    int dx = dir.dx;
-    int dy = dir.dy;
+    int dx = dir.x;
+    int dy = dir.y;
     int same = 1; 
     int blank_ends = 0;
     int x = row+dx;
