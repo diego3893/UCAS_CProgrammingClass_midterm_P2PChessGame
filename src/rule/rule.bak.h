@@ -128,19 +128,6 @@ int checkFiveInRow(const Board* board, int row, int col, Player current_player);
 bool isForbiddenMove(const int chess_shape_cnt[]);
 
 /**
- * @brief 检查某个特定方向上连成的棋型，判断是否为活四或五连
- * 
- * @param board 棋盘
- * @param row 行
- * @param col 列
- * @param num 相连棋子数
- * @param dir 方向
- * @return true 是
- * @return false 否
- */
-bool checkPieceInRowWithDir(const Board* board, int row, int col, int num, Pair dir);
-
-/**
  * @brief 模拟落子，判断空白位置是否为禁手点位
  * 
  * @param board 棋盘
@@ -150,4 +137,16 @@ bool checkPieceInRowWithDir(const Board* board, int row, int col, int num, Pair 
  * @return false 该点位不是禁手点位
  */
 bool isForbiddenPosition(const Board* board, int row, int col);
+
+/**
+ * @brief 用于活三判断，判定该活三在空白处落子能否形成活四
+ * 
+ * @param board 棋盘
+ * @param row 行坐标
+ * @param col 列坐标
+ * @param dir 活三所在的方向
+ * @return true 可以
+ * @return false 不可以
+ */
+bool checkCanFormLiveFour(const Board* board, int row, int col, Pair dir);
 #endif 

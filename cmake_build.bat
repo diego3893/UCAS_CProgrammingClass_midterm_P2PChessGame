@@ -5,7 +5,9 @@ set "PROJECT_NAME=P2PChessGame"
 set "TEST_NAME=test_rule"
 set "MAKE_CMD=mingw32-make"
 
-rd /s /q build
+if exist "build" (
+    rd /s /q "build"
+)
 
 mkdir build
 cd build
