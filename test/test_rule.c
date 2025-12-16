@@ -218,6 +218,27 @@ bool testDoubleBreakthroughFour2() {
     return true;
 }
 
+bool testSpecialBreakthroughFour() {
+    Board board;
+    Piece pieces[BOARD_SIZE+1][BOARD_SIZE+1] = {0};
+    pieces[5][1] = BLACK;
+    pieces[5][2] = BLACK;
+    pieces[5][3] = BLACK;
+    pieces[5][4] = BLACK; 
+    pieces[5][6] = BLACK;
+    pieces[6][5] = BLACK;
+    pieces[6][6] = BLACK;
+    pieces[6][7] = BLACK;
+    pieces[6][8] = BLACK;
+    initTestBoard(&board, pieces);
+
+    int shape_cnt[CHESS_SHAPE_CNT] = {0};
+    checkChessShape(&board, 6, 8, shape_cnt, PLAYER_BLACK);
+    ASSERT(shape_cnt[BREAKTHROUGH_FOUR] >= 1 && isForbiddenMove(shape_cnt), "特殊冲四（单边禁手）判定失败");
+    printf("测试通过: 特殊冲四（单边禁手）\n");
+    return true;
+}
+
 int main() {
     SetConsoleOutputCP(65001);
     SetConsoleCP(65001);
@@ -238,6 +259,7 @@ int main() {
     all_pass &= testLiveFourPlusBreakthrough();
     all_pass &= testDoubleBreakthroughFour();
     all_pass &= testDoubleBreakthroughFour2();
+    all_pass &= testSpecialBreakthroughFour();
 
     printf("\n===== 测试结束 =====\n");
     if (all_pass) {
