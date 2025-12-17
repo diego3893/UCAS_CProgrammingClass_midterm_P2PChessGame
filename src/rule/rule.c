@@ -1,9 +1,5 @@
 #include "rule.h"
 
-/*
-活三、冲四待修改
-*/
-
 GameStatus judgeStatus(const Board* board, int row, int col, Player current_player){
     int five_count = checkFiveInRow(board, row, col, current_player);
     if(five_count > 0){
@@ -125,6 +121,7 @@ int checkLiveThree(const Board* board, int row, int col){
                 blank_ends++;
                 if(checkPieceInRowWithDir(board, x, y, 4, dirs[i])){
                     if(!isForbiddenPosition(board, x, y)){
+                        //空白处落子能成活四并且不是禁手点位，则为一个活三
                         cnt_dir++;
                     }
                 }
@@ -153,6 +150,7 @@ int checkLiveThree(const Board* board, int row, int col){
                 break;
             }
         }
+        //_XXX_的棋型会多统计一次，减去
         if(same==3 && blank_ends==2 && cnt_dir==2){
             cnt_dir--;
         }
@@ -197,6 +195,7 @@ int checkLiveFour(const Board* board, int row, int col){
         if(same==4 && blank_ends==2){
             if(!isForbiddenPosition(board, blank_coord[0].x, blank_coord[0].y)&&
                 !isForbiddenPosition(board, blank_coord[1].x, blank_coord[1].y)){
+                    //活四唯一棋型：_XXXX_，只要两端不是禁手就一定是活四
                     cnt++;
             }
         }
@@ -232,6 +231,7 @@ int checkBreakthroughFour(const Board* board, int row, int col){
                     if(!isForbiddenPosition(board, x, y)){
                         cnt++;
                         blanks++;
+                        //非禁手空白落子可以成五连，可能是一个冲四
                     }else{
                         blocks++;
                     }
@@ -264,6 +264,7 @@ int checkBreakthroughFour(const Board* board, int row, int col){
             }
         }
     }
+    //一个活四会被统计成两个冲四，减去！
     return cnt;
 }
 
@@ -284,7 +285,7 @@ bool checkPieceInRowWithDir(const Board* board, int row, int col, int num, Pair 
     Piece color = BLACK;
     int dx = dir.x;
     int dy = dir.y;
-    if(num == 4){
+    if(num == 4){ //能否形成活四
         int same = 1; 
         int blank_ends = 0;
         Pair blank_coord[2] = {0};
@@ -318,7 +319,7 @@ bool checkPieceInRowWithDir(const Board* board, int row, int col, int num, Pair 
             }
         }
         return false;
-    }else if(num == 5){
+    }else if(num == 5){ //能否五连
         int length = 1;
         int x = row+dx;
         int y = col+dy;
@@ -350,11 +351,11 @@ bool isForbiddenPosition(const Board* board, int row, int col){
         return false;
     }
     Board temp_board;
-    memcpy(&temp_board, board, sizeof(Board));
+    memcpy(&temp_board, board, sizeof(Board)); //虚拟落子
     if(dropPiece(&temp_board, row, col, BLACK) != 1){
         return false; 
     }
     int chess_shape_cnt[CHESS_SHAPE_CNT] = {0};
-    checkChessShape(&temp_board, row, col, chess_shape_cnt, PLAYER_BLACK);
+    checkChessShape(&temp_board, row, col, chess_shape_cnt, PLAYER_BLACK); //递归判断
     return isForbiddenMove(chess_shape_cnt);
 }
