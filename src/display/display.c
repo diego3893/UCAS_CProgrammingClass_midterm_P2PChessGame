@@ -118,17 +118,20 @@ void getInput(char s[], int max_len){
 }
 
 void showGameOver(GameStatus game_status){
+    printf("\n=================================================\n");
+    printf("                    游戏结束                     \n");
+    printf("=================================================\n\n");
     if(game_status == BLACK_WIN){
-        printf("黑方获胜！游戏结束。\n");
+        printf("                    黑方获胜！                     \n\n");
     }
     if(game_status == WHITE_WIN){
-        printf("白方获胜！游戏结束。\n");
+        printf("                    白方获胜！                     \n\n");
     }
     if(game_status == FORBIDDEN_MOVE){
-        printf("黑方出现禁手，白方获胜！游戏结束。\n");
+        printf("               黑方出现禁手，白方获胜！                \n\n");
     }
     if(game_status == DRAW){
-        printf("棋盘已满，和棋！游戏结束\n");
+        printf("                 棋盘已满，和棋！                    \n\n");
     }
     //system("pause");
     return;
