@@ -64,7 +64,7 @@ void showBoard(const Board* board){
         printf("%c ", 'A'+i-1);
     }
     printf("\n");
-    // system("pause");
+    system("pause");
     return;
 }
 

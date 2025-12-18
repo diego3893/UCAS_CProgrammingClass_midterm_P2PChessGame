@@ -1,4 +1,5 @@
 #include "rule.h"
+#include "../display/display.h"
 
 GameStatus judgeStatus(const Board* board, int row, int col, Player current_player){
     int five_count = checkFiveInRow(board, row, col, current_player);
@@ -26,6 +27,7 @@ void checkChessShape(const Board* board, int row, int col, int chess_shape_cnt[]
     for(int i=0; i<CHESS_SHAPE_CNT; ++i){
         chess_shape_cnt[i] = 0;
     }
+    showBoard(board);
     chess_shape_cnt[LIVE_THREE] = checkLiveThree(board, row, col);
     chess_shape_cnt[LIVE_FOUR] = checkLiveFour(board, row, col);
     chess_shape_cnt[BREAKTHROUGH_FOUR] = checkBreakthroughFour(board, row, col) - 2*chess_shape_cnt[LIVE_FOUR];
@@ -269,8 +271,11 @@ int checkBreakthroughFour(const Board* board, int row, int col){
 }
 
 bool isForbiddenMove(const int chess_shape_cnt[]){
+    if(chess_shape_cnt[FIVE_IN_ROW] > 0){
+        return false;
+    }
     if(chess_shape_cnt[LONG_CHAIN] > 0){
-            return true;
+        return true;
     }
     if(chess_shape_cnt[LIVE_THREE] >= 2){
         return true;
