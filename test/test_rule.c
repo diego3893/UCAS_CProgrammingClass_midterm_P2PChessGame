@@ -260,8 +260,8 @@ bool testSpecialBreakthroughFour() {
     int shape_cnt[CHESS_SHAPE_CNT] = {0};
     checkChessShape(&board, 9, 5, shape_cnt, PLAYER_BLACK);
     printCnt(shape_cnt);
-    ASSERT(shape_cnt[BREAKTHROUGH_FOUR] == 1, "特殊冲四（单边禁手）判定失败");
-    printf("测试通过: 特殊冲四（单边禁手）\n");
+    ASSERT(shape_cnt[LIVE_FOUR] == 1, "特殊活四（单边长连，成五非禁手）");
+    printf("测试通过: 特殊活四（单边长连，成五非禁手）\n");
     return true;
 }
 
@@ -321,7 +321,9 @@ bool testSingleBreakthroughFour() {
     printf("测试通过: 单个冲四\n");
     return true;
 }
-bool testFinal() {
+
+//参考 五子棋禁手规则详解.pdf 第12页
+bool testFinal1() {
     Board board;
     Piece pieces[BOARD_SIZE+1][BOARD_SIZE+1] = {0};
     pieces[12][6] = BLACK;
@@ -340,11 +342,12 @@ bool testFinal() {
     int shape_cnt[CHESS_SHAPE_CNT] = {0};
     checkChessShape(&board, 8, 6, shape_cnt, PLAYER_BLACK);
     printCnt(shape_cnt);
-    ASSERT(shape_cnt[LIVE_FOUR]==1 && shape_cnt[BREAKTHROUGH_FOUR]==0, "复杂禁手测试失败");
-    printf("测试通过: 复杂禁手\n");
+    ASSERT(shape_cnt[LIVE_FOUR]==1 && shape_cnt[BREAKTHROUGH_FOUR]==0, "复杂禁手1测试失败");
+    printf("测试通过: 复杂禁手1\n");
     return true;
 }
-//参考 五子棋禁手规则详解.pdf 第12页
+
+//参考 五子棋禁手规则详解.pdf 第13页
 bool testFinal2() {
     Board board;
     Piece pieces[BOARD_SIZE+1][BOARD_SIZE+1] = {0};
@@ -357,13 +360,10 @@ bool testFinal2() {
     pieces[7][5] = BLACK;
     pieces[7][6] = BLACK;
     pieces[6][5] = BLACK;
-    pieces[6][6] = BLACK;
-    pieces[5][6] = BLACK;
-    pieces[5][5] = BLACK;
     initTestBoard(&board, pieces);
 
     int shape_cnt[CHESS_SHAPE_CNT] = {0};
-    checkChessShape(&board, 5, 5, shape_cnt, PLAYER_BLACK);
+    checkChessShape(&board, 6, 5, shape_cnt, PLAYER_BLACK);
     printCnt(shape_cnt);
     ASSERT(shape_cnt[LIVE_THREE]==1 && (!isForbiddenMove(shape_cnt)), "复杂禁手2测试失败");
     printf("测试通过: 复杂禁手2\n");
@@ -397,7 +397,7 @@ int main() {
     all_pass &= testSingleLiveFour();
     all_pass &= testSingleLiveThree();
 
-    all_pass &= testFinal();
+    all_pass &= testFinal1();
     all_pass &= testFinal2();
 
     printf("\n===== 测试结束 =====\n");
