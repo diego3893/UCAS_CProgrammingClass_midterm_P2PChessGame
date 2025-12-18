@@ -99,6 +99,7 @@ mingw32-make
 - 禁手判断函数中冲四计数器会把活四计为2个冲四，在统计时用`chess_shape_cnt[BREAKTHROUGH_FOUR]-2*chess_shape_cnt[LIVE_FOUR]`解决
   - 对冲四判定不太严格
   - 已解决该问题
+- 测试用例中**复杂禁手2**的判断用时较长（约6.5s），但能得出正确结果，算法待优化
 
 ## 其他
 暂无
