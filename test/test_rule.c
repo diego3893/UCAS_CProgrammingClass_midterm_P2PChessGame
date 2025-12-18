@@ -347,7 +347,6 @@ bool testFinal() {
     return true;
 }
 
-
 int main() {
     SetConsoleOutputCP(65001);
     SetConsoleCP(65001);

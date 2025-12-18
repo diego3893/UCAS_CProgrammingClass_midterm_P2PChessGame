@@ -269,8 +269,11 @@ int checkBreakthroughFour(const Board* board, int row, int col){
 }
 
 bool isForbiddenMove(const int chess_shape_cnt[]){
+    if(chess_shape_cnt[FIVE_IN_ROW] > 0){
+        return false;
+    }
     if(chess_shape_cnt[LONG_CHAIN] > 0){
-            return true;
+        return true;
     }
     if(chess_shape_cnt[LIVE_THREE] >= 2){
         return true;
