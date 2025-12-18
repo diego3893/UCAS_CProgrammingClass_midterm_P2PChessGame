@@ -275,8 +275,6 @@ bool checkPieceInRowWithDir(const Board* board, int row, int col, int num, Pair 
     if(num == 4){ //能否形成活四
         int same = 1; 
         int blank_ends = 0;
-        Pair blank_coord[2] = {0};
-        int Index = 0;
         int x = row+dx;
         int y = col+dy;
         while(x>=1 && x<=BOARD_SIZE && y>=1 && y<=BOARD_SIZE && getPiece(board, x, y)==color){
@@ -286,7 +284,6 @@ bool checkPieceInRowWithDir(const Board* board, int row, int col, int num, Pair 
         }
         if(x>=1 && x<=BOARD_SIZE && y>=1 && y<=BOARD_SIZE && getPiece(board, x, y)==BLANK){
             blank_ends++;
-            blank_coord[Index].x = x, blank_coord[Index++].y = y;
         }
         x = row-dx;
         y = col-dy;
@@ -297,13 +294,9 @@ bool checkPieceInRowWithDir(const Board* board, int row, int col, int num, Pair 
         }
         if(x>=1 && x<=BOARD_SIZE && y>=1 && y<=BOARD_SIZE && getPiece(board, x, y)==BLANK){
             blank_ends++;
-            blank_coord[Index].x = x, blank_coord[Index++].y = y;
         }
         if(same==4 && blank_ends==2){
-            if(!isForbiddenPosition(board, blank_coord[0].x, blank_coord[0].y)&&
-                !isForbiddenPosition(board, blank_coord[1].x, blank_coord[1].y)){
-                    return true;
-            }
+            return true;
         }
         return false;
     }else if(num == 5){ //能否五连
